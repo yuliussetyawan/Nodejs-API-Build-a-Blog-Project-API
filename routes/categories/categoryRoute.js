@@ -1,52 +1,17 @@
 const express = require("express");
+const { postCategory, categoryProfileCtrl, deleteCategoryCtrl, updateCategoryCtrl } = require("../../controllers/categories/categoryCtrl");
 const categoryRouter = express.Router();
 
 // POST/api/v1/categories
-categoryRouter.post("/", async (req, res) => {
-  try {
-    res.json({
-      status: "success",
-      data: "category created",
-    });
-  } catch (error) {
-    res.json(error.message);
-  }
-});
+categoryRouter.post("/", postCategory);
 
 // GET/api/v1/categories/:id
-categoryRouter.get("/:id", async (req, res) => {
-  try {
-    res.json({
-      status: "success",
-      data: "category route",
-    });
-  } catch (error) {
-    res.json(error.message);
-  }
-});
+categoryRouter.get("/:id", categoryProfileCtrl);
 
 // DELETE/api/v1/categories/:id
-categoryRouter.delete("/:id", async (req, res) => {
-  try {
-    res.json({
-      status: "success",
-      data: "delete category route",
-    });
-  } catch (error) {
-    res.json(error.message);
-  }
-});
+categoryRouter.delete("/:id", deleteCategoryCtrl);
 
 // PUT/api/v1/categories/:id
-categoryRouter.put("/:id", async (req, res) => {
-  try {
-    res.json({
-      status: "success",
-      data: "update category route",
-    });
-  } catch (error) {
-    res.json(error.message);
-  }
-});
+categoryRouter.put("/:id", updateCategoryCtrl);
 
 module.exports = categoryRouter;
