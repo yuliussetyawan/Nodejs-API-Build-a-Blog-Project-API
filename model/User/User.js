@@ -1,77 +1,77 @@
-const mongoose = require('monggose')
+const mongoose = require("mongoose");
 
 // create a schema or a blueprint to create instance of user
 const userSchema = new mongoose.Schema(
   {
     firstname: {
       type: String,
-      required: [true, 'First Name is required']
+      required: [true, "First Name is required"],
     },
     lastname: {
       type: String,
-      required: [true, 'Last Name is required']
+      required: [true, "Last Name is required"],
     },
     profilePhoto: {
-      type: String
+      type: String,
     },
     email: {
       type: String,
-      required: [true, 'Email is required']
+      required: [true, "Email is required"],
     },
     password: {
       type: String,
-      required: [true, 'Password is required']
+      required: [true, "Password is required"],
     },
     postCount: {
       type: Number,
-      default: 0
+      default: 0,
     },
     isBlocked: {
       type: Boolean,
-      default: false
+      default: false,
     },
     isAdmin: {
       type: Boolean,
-      default: false
+      default: false,
     },
     role: {
       type: String,
-      enum: ['Admin', 'Guest', 'Editor']
+      enum: ["Admin", "Guest", "Editor"],
     },
     viewedBy: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
-      }
+        ref: "User",
+      },
     ],
     followers: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
-      }
+        ref: "User",
+      },
     ],
     following: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
-      }
+        ref: "User",
+      },
     ],
     active: {
       type: Boolean,
-      default: true
+      default: true,
     },
     posts: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Post'
-      }
-    ]
+        ref: "Post",
+      },
+    ],
   },
   {
-    timestamps: true
+    timestamps: true,
   }
-)
+);
 
 // compile the user model
-const User = mongoose.model('User', userSchema)
-module.exports = User
+const User = mongoose.model("User", userSchema);
+module.exports = User;

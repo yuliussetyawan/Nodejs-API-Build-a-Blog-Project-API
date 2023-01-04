@@ -8,6 +8,8 @@ require("dotenv").config();
 require("./config/dbConnect");
 
 // middlewares
+app.use(express.json());    // pass incoming payload
+
 // -----
 // routes
 // -----
