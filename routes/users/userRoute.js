@@ -8,6 +8,7 @@ const {
   updateCtrl,
   deleteCtrl,
 } = require("../../controllers/users/userCtrl");
+const isLogin = require("../../middlewares/isLogin");
 
 // POST/api/v1/users/register
 userRouter.post("/register", userRegisterCtrl);
@@ -19,7 +20,8 @@ userRouter.post("/login", userLoginCtrl);
 userRouter.get("/", usersCtrl);
 
 // GET/api/v1/users/profile/:id
-userRouter.get("/profile/:id", userProfileCtrl);
+// verify token bearer 
+userRouter.get("/profile/:id", isLogin, userProfileCtrl);
 
 // DELETE/api/v1/users/:id
 userRouter.delete("/:id", deleteCtrl);
