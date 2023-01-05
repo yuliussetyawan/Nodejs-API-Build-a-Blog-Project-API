@@ -21,7 +21,7 @@ const userRegisterCtrl = async (req, res) => {
       firstname,
       lastname,
       email,
-      password:hashedPassword,
+      password: hashedPassword,
     });
 
     res.json({
@@ -44,18 +44,27 @@ const userLoginCtrl = async (req, res) => {
         msg: "wrong login credentials",
       });
     }
+    if (!userFound) {
+      return res.json({
+        msg: "Invalid login credentials",
+      });
+    }
 
-    // validity of the password
-    const isPasswordMatched = await User.findOne({ password });
+    // verify password
+    const isPasswordMatched = await bcrypt.compare(
+      password,
+      userFound.password
+    );
+    
     if (!isPasswordMatched) {
       return res.json({
-        msg: "wrong login credentials",
+        msg: "Invalid login credentials",
       });
     }
 
     res.json({
       status: "success",
-      data: "user login",
+      data: userFound,
     });
   } catch (error) {
     res.json(error.message);
