@@ -2,7 +2,7 @@ const User = require("../../model/User/User");
 const bcrypt = require("bcryptjs");
 const generateToken = require("../../utils/generateToken");
 const getTokenFromHeader = require("../../utils/getTokenFromHeader");
-const {appErr, AppErr} = require("../../utils/appErr");
+const { appErr, AppErr } = require("../../utils/appErr");
 
 // register
 const userRegisterCtrl = async (req, res, next) => {
@@ -130,18 +130,41 @@ const deleteCtrl = async (req, res) => {
 };
 
 // profile photo upload
-const profilePhotoUploadCtrl = async (req, res) => {
-  console.log(req.file);
+const profilePhotoUploadCtrl = async (req, res, next) => {
   try {
-    res.json({
-      status: "success",
-      data: "profile photo upload",
-    });
+    // 1. find the user to be updated
+    const userToUpdate = await User.findById(req.userAuth);
+    // 2. check if user is found
+    if (!userToUpdate) {
+      return next(appErr("User Not Found", 403));
+    }
+    // 3. check if user is blocked
+    if (userToUpdate.isBlocked) {
+      return next(appErr("Action not allowed, your account is blocked", 400));
+    }
+    // 4. check if user updating their photo
+    if (req.file) {
+      // 5. update profile photo
+      await User.findByIdAndUpdate(
+        req.userAuth,
+        {
+          $set: {
+            profilePhoto: req.file.path,
+          },
+        },
+        {
+          new: true,
+        }
+      );
+      res.json({
+        status: "success",
+        data: "You have succesfully updated your photo",
+      });
+    }
   } catch (error) {
-    res.json(error.message);
+    next(appErr(error.message, 500));
   }
 };
-
 
 module.exports = {
   userRegisterCtrl,
@@ -152,4 +175,3 @@ module.exports = {
   deleteCtrl,
   profilePhotoUploadCtrl,
 };
-
