@@ -10,6 +10,7 @@ const {
   deleteCtrl,
   profilePhotoUploadCtrl,
   whoViewedMyProfile,
+  followingCtrl,
 } = require("../../controllers/users/userCtrl");
 const isLogin = require("../../middlewares/isLogin");
 const multer = require("multer");
@@ -39,6 +40,9 @@ userRouter.put("/:id", updateCtrl);
 // GET/api/v1/users/profile-viewers/:id
 userRouter.get("/profile-viewers/:id", isLogin, whoViewedMyProfile)
 
+// GET/api/v1/users/following/:id
+userRouter.get("/following/:id", isLogin, followingCtrl)
+
 // POST/api/v1/users/:id
 userRouter.post(
   "/profile-photo-upload",
@@ -46,5 +50,6 @@ userRouter.post(
   upload.single("profile"),
   profilePhotoUploadCtrl
 );
+
 
 module.exports = userRouter;

@@ -105,6 +105,41 @@ const whoViewedMyProfile = async (req, res) => {
   }
 };
 
+// following
+const followingCtrl = async (req, res, next) => {
+  try {
+    // 1. find user to follow
+    const userToFollow = await User.findById(req.params.id);
+    // 2. find the user who is following
+    const userWhoFollowed = await User.findById(req.userAuth);
+    // 3. check if user and userWhoFollowerd are found
+    if (userToFollow && userWhoFollowed) {
+      // 4. check if userWhoFollowed is already in the user's followers array
+      const isUserAlreadyFollowed = userToFollow.following.find(
+        (follower) => follower.toString() === userWhoFollowed._id.toString()
+      );
+      if (isUserAlreadyFollowed) {
+        return next(appErr("You already followed this user"));
+      } else {
+        // 5. push userWhoFollowed into the user's followers array
+        userToFollow.followers.push(userWhoFollowed._id);
+        // push userToFollow to the userWhoFollowed's following array
+        userWhoFollowed.following.push(userToFollow._id);
+
+        // save
+        await userWhoFollowed.save();
+        await userToFollow.save();
+        res.json({
+          status: "success",
+          data: "You have succesfully followed this user",
+        });
+      }
+    }
+  } catch (error) {
+    res.json(error.message);
+  }
+};
+
 // all
 const usersCtrl = async (req, res) => {
   try {
@@ -206,4 +241,5 @@ module.exports = {
   deleteCtrl,
   profilePhotoUploadCtrl,
   whoViewedMyProfile,
+  followingCtrl,
 };
