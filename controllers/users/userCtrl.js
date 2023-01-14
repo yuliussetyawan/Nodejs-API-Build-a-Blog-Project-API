@@ -116,7 +116,7 @@ const followingCtrl = async (req, res, next) => {
     if (userToFollow && userWhoFollowed) {
       // 4. check if userWhoFollowed is already in the user's followers array
       const isUserAlreadyFollowed = userToFollow.following.find(
-        follower => follower.toString() === userWhoFollowed._id.toString()
+        (follower) => follower.toString() === userWhoFollowed._id.toString()
       );
       if (isUserAlreadyFollowed) {
         return next(appErr("You already followed this user"));
@@ -187,6 +187,37 @@ const usersCtrl = async (req, res) => {
       status: "success",
       data: "all users route",
     });
+  } catch (error) {
+    next(appErr(error.message));
+  }
+};
+
+// block
+const blockUsersCtrl = async (req, res) => {
+  try {
+    // 1. Find the user to be blocked
+    const userToBeBlocked = await User.findById(req.params.id);
+    // 2. Find the user who is blocking
+    const userWhoBlocked = await User.findById(req.userAuth);
+    // 3. Check if userToBeBlocked and userWhoBlocked are found
+    if (userToBeBlocked && userWhoBlocked) {
+      // 4. Check if userWhoBlocked is alredy in the user's blocked array
+      const isUserAlreadyBlocked = userWhoBlocked.blocked.find(
+        (blocked) => blocked.toString() === userToBeBlocked._id.toString()
+      );
+      if (isUserAlreadyBlocked){
+        return next(appErr("You already blocked this user"));
+      }
+      // 7. Push userToBeBlocked to the userWhoBlocked's blocked arr
+      userWhoBlocked.blocked.push(userToBeBlocked._id);
+      // 8. save
+      await userWhoBlocked.save();
+      res.json({
+        status: "success",
+        data: "Blocked",
+      });
+    }
+   
   } catch (error) {
     next(appErr(error.message));
   }
@@ -283,4 +314,5 @@ module.exports = {
   whoViewedMyProfile,
   followingCtrl,
   unfollowCtrl,
+  blockUsersCtrl,
 };
