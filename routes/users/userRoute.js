@@ -13,6 +13,7 @@ const {
   followingCtrl,
   unfollowCtrl,
   blockUsersCtrl,
+  unblockUsersCtrl,
 } = require("../../controllers/users/userCtrl");
 const isLogin = require("../../middlewares/isLogin");
 const multer = require("multer");
@@ -50,6 +51,9 @@ userRouter.get("/unfollowing/:id", isLogin, unfollowCtrl);
 
 // GET/api/v1/users/block/:id
 userRouter.get("/block/:id", isLogin, blockUsersCtrl);
+
+// GET/api/v1/users/unblock/:id
+userRouter.get("/unblock/:id", isLogin, unblockUsersCtrl);
 
 // POST/api/v1/users/:id
 userRouter.post(

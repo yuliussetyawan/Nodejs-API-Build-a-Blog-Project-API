@@ -205,7 +205,7 @@ const blockUsersCtrl = async (req, res) => {
       const isUserAlreadyBlocked = userWhoBlocked.blocked.find(
         (blocked) => blocked.toString() === userToBeBlocked._id.toString()
       );
-      if (isUserAlreadyBlocked){
+      if (isUserAlreadyBlocked) {
         return next(appErr("You already blocked this user"));
       }
       // 7. Push userToBeBlocked to the userWhoBlocked's blocked arr
@@ -217,7 +217,40 @@ const blockUsersCtrl = async (req, res) => {
         data: "Blocked",
       });
     }
-   
+  } catch (error) {
+    next(appErr(error.message));
+  }
+};
+
+// unblock
+// all
+const unblockUsersCtrl = async (req, res) => {
+  try {
+    // 1. Find the user to be unblocked
+    const userToBeUnBlocked = await User.findById(req.params.id);
+    // 2. Find the user who is unblocking
+    const userWhoUnBlocked = await User.findById(req.userAuth);
+    // 3. Check if userToBeUnBlocked and userWhoUnBlocked are found
+    if (userToBeUnBlocked && userWhoUnBlocked) {
+      // 4. Check if userToBeUnBlocked is already in the array's of userWhoUnbBlocked
+      const isUserAlreadyBlocked = userWhoUnBlocked.blocked.find(
+        (blocked) => blocked.toString() === userToBeUnBlocked._id.toString()
+      );
+      if (!isUserAlreadyBlocked) {
+        return next(appErr("You have blocked this user"));
+      }
+      // Remove the userToBeUnblocked from the main user
+      userWhoUnBlocked.blocked = userWhoUnBlocked.blocked.filter(
+        (blocked) => blocked.toString() !== userToBeUnBlocked._id.toString()
+      );
+    }
+    // Save
+    await userWhoUnBlocked.save();
+
+    res.json({
+      status: "success",
+      data: "unblock user",
+    });
   } catch (error) {
     next(appErr(error.message));
   }
@@ -315,4 +348,5 @@ module.exports = {
   followingCtrl,
   unfollowCtrl,
   blockUsersCtrl,
+  unblockUsersCtrl,
 };
