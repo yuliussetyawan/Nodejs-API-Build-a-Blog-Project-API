@@ -16,6 +16,7 @@ const {
   blockUsersCtrl,
   unblockUsersCtrl,
   adminUserBlockCtrl,
+  adminUserunblockCtrl
 } = require("../../controllers/users/userCtrl");
 const isLogin = require("../../middlewares/isLogin");
 const multer = require("multer");
@@ -58,8 +59,11 @@ userRouter.get("/block/:id", isLogin, blockUsersCtrl);
 // GET/api/v1/users/unblock/:id
 userRouter.get("/unblock/:id", isLogin, unblockUsersCtrl);
 
-// PUT/api/v1/users/adminBlock/:id
+// PUT/api/v1/users/admin-block/:id
 userRouter.put("/admin-block/:id", isLogin, isAdmin, adminUserBlockCtrl);
+
+// PUT/api/v1/users/admin-unblock/:id
+userRouter.put("/admin-unblock/:id", isLogin, isAdmin, adminUserunblockCtrl);
 
 // POST/api/v1/users/:id
 userRouter.post(
