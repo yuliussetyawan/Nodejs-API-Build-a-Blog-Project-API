@@ -99,6 +99,26 @@ userSchema.virtual("postCounts").get(function(){
   return this.posts.length;
 });
 
+// get followers count
+userSchema.virtual("followersCount").get(function(){
+  return this.followers.length;
+});
+
+// get following count
+userSchema.virtual("followingCount").get(function(){
+  return this.following.length;
+});
+
+// get viewers count
+userSchema.virtual("viewersCount").get(function(){
+  return this.viewers.length;
+});
+
+// get blocked count
+userSchema.virtual("blockedCount").get(function(){
+  return this.blocked.length;
+});
+
 
 // compile the user model
 const User = mongoose.model("User", userSchema);
