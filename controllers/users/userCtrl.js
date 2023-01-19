@@ -182,10 +182,11 @@ const unfollowCtrl = async (req, res) => {
 
 // all
 const usersCtrl = async (req, res) => {
+  const users = await User.find();
   try {
     res.json({
       status: "success",
-      data: "all users route",
+      data: users,
     });
   } catch (error) {
     next(appErr(error.message));
