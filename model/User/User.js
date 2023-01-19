@@ -84,10 +84,15 @@ const userSchema = new mongoose.Schema(
   }
 );
 
-// Get the fullname 
+// get the fullname 
 userSchema.virtual("fullname").get(function(){
   return `${this.firstname} ${this.lastname}`;
 })
+
+// get user initials
+userSchema.virtual("initials").get(function(){
+  return `${this.firstname[0]}${this.lastname[0]}`;
+});
 
 // compile the user model
 const User = mongoose.model("User", userSchema);
