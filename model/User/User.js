@@ -94,6 +94,12 @@ userSchema.virtual("initials").get(function(){
   return `${this.firstname[0]}${this.lastname[0]}`;
 });
 
+// get posts count
+userSchema.virtual("postCounts").get(function(){
+  return this.posts.length;
+});
+
+
 // compile the user model
 const User = mongoose.model("User", userSchema);
 module.exports = User;
