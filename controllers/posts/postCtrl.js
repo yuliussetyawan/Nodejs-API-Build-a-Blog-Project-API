@@ -1,9 +1,25 @@
+const Post = require("../../model/Post/Post");
+const User = require("../../model/User/User");
+
 // create post
-const postPost = async (req, res) => {
+const createPostCtrl = async (req, res) => {
+  const {title, description} = req.body;
   try {
+    // find the user
+    const author = await User.findById(req.userAuth);
+    // create the post
+    const postCreated = await Post.create({
+      title,
+      description,
+      user: author._id,
+    });
+    // Associate user to a post -Push the post into the user posts field
+    author.posts.push(postCreated);
+    // save
+    await author.save();
     res.json({
       status: "success",
-      data: "post created",
+      data: postCreated,
     });
   } catch (error) {
     res.json(error.message);
@@ -59,7 +75,7 @@ const updatePostCtrl = async (req, res) => {
   }
 
 module.exports = {
-  postPost,
+  createPostCtrl,
   postProfileCtrl,
   postsCtrl,
   deletePostCtrl,

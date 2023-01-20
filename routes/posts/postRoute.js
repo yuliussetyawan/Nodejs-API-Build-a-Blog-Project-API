@@ -1,20 +1,20 @@
 const express = require("express");
-
 const postRouter = express.Router();
-
 const {
-  postPost,
+  createPostCtrl,
   postProfileCtrl,
   postsCtrl,
   deletePostCtrl,
   updatePostCtrl,
 } = require("../../controllers/posts/postCtrl");
+const isLogin = require("../../middlewares/isLogin");
+isLogin;
 
 // POST/api/v1/posts
-postRouter.post("/", postPost);
+postRouter.post("/", isLogin, createPostCtrl);
 
 // GET/api/v1/post/:id
-postRouter.get("/:id", postProfileCtrl );
+postRouter.get("/:id", postProfileCtrl);
 
 // GET/api/v1/posts
 postRouter.get("/", postsCtrl);
