@@ -75,50 +75,61 @@ const userSchema = new mongoose.Schema(
       type: String,
       enum: ["Bronze", "Silver", "Gold"],
       default: "Bronze",
-    }
+    },
   },
 
   {
     timestamps: true,
-    toJSON:{virtuals:true},
+    toJSON: { virtuals: true },
   }
 );
 
-// get the fullname 
-userSchema.virtual("fullname").get(function(){
+// Hooks
+// pre-before record is saved//find findOne
+userSchema.pre(/^find/, function (next) {
+  console.log("Pre hook called");
+  next();
+});
+
+// post -after saving//create
+userSchema.post("save", function (next) {
+  console.log("Post Hook");
+});
+
+// get the fullname
+userSchema.virtual("fullname").get(function () {
   return `${this.firstname} ${this.lastname}`;
-})
+});
 
 // get user initials
-userSchema.virtual("initials").get(function(){
+userSchema.virtual("initials").get(function () {
   return `${this.firstname[0]}${this.lastname[0]}`;
 });
 
 // get posts count
-userSchema.virtual("postCounts").get(function(){
+userSchema.virtual("postCounts").get(function () {
   return this.posts.length;
 });
 
 // get followers count
-userSchema.virtual("followersCount").get(function(){
+userSchema.virtual("followersCount").get(function () {
   return this.followers.length;
 });
 
 // get following count
-userSchema.virtual("followingCount").get(function(){
+userSchema.virtual("followingCount").get(function () {
   return this.following.length;
 });
 
 // get viewers count
-userSchema.virtual("viewersCount").get(function(){
+userSchema.virtual("viewersCount").get(function () {
   return this.viewers.length;
 });
 
 // get blocked count
-userSchema.virtual("blockedCount").get(function(){
+userSchema.virtual("blockedCount").get(function () {
   return this.blocked.length;
 });
-
 
 // compile the user model
 const User = mongoose.model("User", userSchema);
