@@ -104,6 +104,25 @@ userSchema.pre("findOne", async function (next) {
   userSchema.virtual("lastPostDate").get(function () {
     return lastPostDateStr;
   });
+  //----------------------------------CHECK IF USER INACTIVE FOR THE LAST 30 DAYS --------------------------------//
+  // get current date
+  const currentDate = new Date();
+  // get the diffence between the last post date and the current data
+  const diff = currentDate - lastPostDate;
+  // get the difference in days and return less than in days
+  const diffInDays = diff / (1000 * 3600 * 24);
+
+  if (diffInDays > 30) {
+    // Add virtuals isInactive to the schema to check if a user is inactive for 30 days
+    userSchema.virtual("isInactive").get(function () {
+      return true;
+    });
+  } else {
+    userSchema.virtual("isInactive").get(function () {
+      return false;
+    });
+  }
+
   next();
 });
 
