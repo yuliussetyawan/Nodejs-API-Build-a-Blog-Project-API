@@ -308,7 +308,7 @@ const userProfileCtrl = async (req, res) => {
   try {
     // get token from the header
     const token = getTokenFromHeader(req);
-    console.log(token);
+    //console.log(token);
     const user = await User.findById(req.userAuth);
     res.json({
       status: "success",

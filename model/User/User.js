@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const Post = require("../Post/Post");
 
 // create a schema or a blueprint to create instance of user
 const userSchema = new mongoose.Schema(
@@ -86,15 +87,30 @@ const userSchema = new mongoose.Schema(
 
 // Hooks
 // pre-before record is saved//find findOne
-userSchema.pre(/^find/, function (next) {
-  console.log("Pre hook called");
+
+userSchema.pre("findOne", async function (next) {
+  // get the user id
+  const userId = this._conditions._id;
+  // find the post created by the user
+  const posts = await Post.find({ user: userId });
+  // get the last post created by the user
+  const lastPost = posts[posts.length - 1];
+
+  // get the last post date
+  const lastPostDate = new Date(lastPost?.createdAt);
+  // get the last post date in string format
+  const lastPostDateStr = lastPostDate.toDateString();
+  // add virtuals to the schema
+  userSchema.virtual("lastPostDate").get(function () {
+    return lastPostDateStr;
+  });
   next();
 });
 
 // post -after saving//create
-userSchema.post("save", function (next) {
-  console.log("Post Hook");
-});
+// userSchema.post("save", function (next) {
+//   console.log("Post Hook");
+// });
 
 // get the fullname
 userSchema.virtual("fullname").get(function () {
