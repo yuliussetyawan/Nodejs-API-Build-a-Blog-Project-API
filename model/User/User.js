@@ -117,10 +117,14 @@ userSchema.pre("findOne", async function (next) {
     userSchema.virtual("isInactive").get(function () {
       return true;
     });
+    // Find the user by ID and update
+    await User.findByIdAndUpdate(userId, { isBlocked: true }, { new: true });
   } else {
     userSchema.virtual("isInactive").get(function () {
       return false;
     });
+    // Find the user by ID and update
+    await User.findByIdAndUpdate(userId, { isBlocked: false }, { new: true });
   }
 
   next();
