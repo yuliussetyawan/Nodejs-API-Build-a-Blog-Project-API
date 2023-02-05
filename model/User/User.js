@@ -127,6 +127,26 @@ userSchema.pre("findOne", async function (next) {
     await User.findByIdAndUpdate(userId, { isBlocked: false }, { new: true });
   }
 
+  // --------------Last active days-------------
+
+  // convert to days ago, for example 1 days ago
+  const daysAgo = Math.floor(diffInDays);
+  // add virtuals last active in days to the schema
+  userSchema.virtual("lastActive").get(function () {
+    // check if days ago less than 0
+    if (daysAgo >= 0) {
+      return "Today";
+    }
+    // check if days ago is equal to 1
+    if (daysAgo === 1) {
+      return "Yesterday";
+    }
+    // check if days ago is greater than 1
+    if (daysAgo > 1){
+      return `${daysAgo} days ago`
+    }
+  });
+
   next();
 });
 
