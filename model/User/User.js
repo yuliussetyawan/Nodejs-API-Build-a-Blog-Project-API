@@ -142,10 +142,54 @@ userSchema.pre("findOne", async function (next) {
       return "Yesterday";
     }
     // check if days ago is greater than 1
-    if (daysAgo > 1){
-      return `${daysAgo} days ago`
+    if (daysAgo > 1) {
+      return `${daysAgo} days ago`;
     }
   });
+
+  //-------------------------------------------
+  // Update userAward based on the number of posts
+  //-------------------------------------------
+  // get the number of posts
+  const numberOfPosts = posts.length;
+  //check if the number of posts is less than 10
+  if (numberOfPosts < 10) {
+    await User.findByIdAndUpdate(
+      userId,
+      {
+        userAward: "Bronze",
+      },
+      {
+        new: true,
+      }
+    );
+  }
+
+  //check if the number of posts is more than 20
+  if (numberOfPosts > 20) {
+    await User.findByIdAndUpdate(
+      userId,
+      {
+        userAward: "Gold",
+      },
+      {
+        new: true,
+      }
+    );
+  }
+
+  //check if the number of posts is more than 10
+  if (numberOfPosts > 10) {
+    await User.findByIdAndUpdate(
+      userId,
+      {
+        userAward: "Silver",
+      },
+      {
+        new: true,
+      }
+    );
+  }
 
   next();
 });
